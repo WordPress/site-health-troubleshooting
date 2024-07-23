@@ -1,0 +1,48 @@
+{
+	"name": "wordpress/troubleshooting",
+	"type": "wordpress-plugin",
+	"version": "1.0.0",
+	"description": "Introduces additional common tools to the Site Health interface.",
+	"keywords": [
+		"health check",
+		"site health",
+		"troubleshooting"
+	],
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=7.1"
+	},
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "~1.0.0",
+		"wp-coding-standards/wpcs": "^2.3.0",
+		"phpunit/phpunit": "~7.4.0",
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"spatie/phpunit-watcher": "^1.10",
+		"phpstan/phpstan": "^1.4",
+		"szepeviktor/phpstan-wordpress": "^1.0",
+		"phpstan/extension-installer": "^1.1"
+	},
+	"scripts": {
+		"lint": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --report=summary,source",
+		"lint:compat": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --standard=phpcompat.xml.dist --report=summary,source",
+		"lint:full": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs",
+		"lint:format": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf --report=summary,source",
+		"phpstan": "phpstan analyse . --no-progress",
+		"test": "phpunit",
+		"test:watch": "phpunit-watcher watch < /dev/tty",
+		"automation:lint:compat": "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --standard=phpcompat.xml.dist -q --report=checkstyle",
+		"automation:phpstan": "phpstan analyse . --error-format=checkstyle --no-progress"
+	},
+	"support": {
+		"issues": "https://wordpress.org/support/plugin/siteh-health-tools"
+	},
+	"config": {
+		"platform": {
+			"php": "7.1"
+		},
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"phpstan/extension-installer": true
+		}
+	}
+}

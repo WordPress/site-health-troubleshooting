@@ -1,0 +1,148 @@
+@import 'variables';
+
+#health-check-dashboard-widget {
+
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+	display: grid;
+	grid-gap: 2%;
+	grid-template-columns: 100%;
+	padding: 13px;
+	background: #fff;
+
+	@media all and (min-width: 783px) {
+
+		margin-top: 3rem;
+		grid-template-columns: 49% 49%;
+	}
+
+	h2 {
+
+		.green {
+
+			color: #40860a;
+		}
+	}
+
+	.welcome-panel-content {
+
+		display: block;
+		max-width: initial;
+	}
+
+	#health-check-accordion-block-notices {
+
+		.no-notices {
+
+			p {
+
+				color: $font_color__troubleshooting_mode;
+				font-size: 1.2rem;
+			}
+		}
+
+		.notice {
+
+			p {
+
+				font-size: $font_size__text;
+			}
+
+			color: $font_color__troubleshooting_mode;
+			margin-left: 0;
+		}
+
+		.dismiss-notices {
+
+			display: block;
+			width: 100%;
+			text-align: right;
+			margin-right: 1rem;
+		}
+	}
+
+	.disable-troubleshooting-mode {
+
+		margin-bottom: 1rem;
+
+		@media all and (min-width: 960px) {
+
+			position: absolute;
+			bottom: 1rem;
+			right: 1rem;
+		}
+	}
+
+	ul {
+
+		li {
+
+			font-size: $font_size__text;
+
+			@media all and (max-width: 870px) {
+
+				display: inline-block;
+				width: 100%;
+			}
+		}
+	}
+
+	.about-description {
+
+		margin: 1em 0;
+		display: inline-block;
+
+		p {
+
+			color: inherit;
+			font-size: 16px;
+		}
+	}
+}
+
+#health-check-nonce-validator {
+	position: fixed;
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+
+	.health-check-nonce-validator-wrapper {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background: rgba(0, 0, 0, 0.5);
+
+		.health-check-nonce-validator-inner {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 50%;
+			min-width: 400px;
+			max-width: 800px;
+			background: #fff;
+			padding: 20px;
+			border-radius: 2px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+			h2 {
+				margin: 0 0 20px;
+				font-size: 20px;
+				font-weight: 400;
+			}
+
+			p {
+				margin: 10px 0 0;
+				font-size: 14px;
+				font-weight: 400;
+
+				&:first-of-type {
+					margin: 0;
+				}
+			}
+		}
+	}
+}
