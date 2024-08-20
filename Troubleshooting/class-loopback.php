@@ -197,7 +197,7 @@ class Loopback {
 					\esc_html__( 'Active theme: %s', 'troubleshooting' ),
 					$theme['name']
 				),
-				\esc_html__( 'Waiting...', 'troubleshootingk' )
+				\esc_html__( 'Waiting...', 'troubleshooting' )
 			);
 
 			$message .= '</table>';
