@@ -1492,7 +1492,7 @@ class MustUse {
 														'troubleshooting'
 													)
 												),
-												( is_countable( $this->active_plugins ) ? ( count( $this->active_plugins ) - 5 ) : 0 )
+												\esc_html( ( is_countable( $this->active_plugins ) ? ( count( $this->active_plugins ) - 5 ) : 0 ) )
 											)
 										);
 									}
@@ -1576,11 +1576,11 @@ class MustUse {
 													_n(
 														'Show %d remaining theme',
 														'Show %d remaining themes',
-														( count( $themes ) - 5 ),
+														( is_countable( $themes ) ? ( count( $themes ) - 5 ) : 0 ),
 														'troubleshooting'
 													)
 												),
-												( count( $themes ) - 5 )
+												\esc_html( ( is_countable( $themes ) ? ( count( $themes ) - 5 ) : 0 ) )
 											)
 										);
 									}
