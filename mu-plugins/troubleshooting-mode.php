@@ -18,7 +18,7 @@ class MustUse {
 	/**
 	 * @var null|string
 	 */
-	private $disable_hash    = null;
+	private $disable_hash = null;
 
 	/**
 	 * @var bool
@@ -28,7 +28,7 @@ class MustUse {
 	/**
 	 * @var array<int, string>
 	 */
-	private $active_plugins  = array();
+	private $active_plugins = array();
 
 	/**
 	 * @var array<int|string, string>
@@ -257,7 +257,8 @@ class MustUse {
 		 * This is to early for `get_current_screen()`, so we have to do it the
 		 * old fashioned way with `$_SERVER`.
 		 */
-		if ( 'plugin-install.php' === substr( $_SERVER['REQUEST_URI'], -18 ) ) {
+		$request_uri = \filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
+		if ( 'plugin-install.php' === substr( $request_uri, -18 ) ) {
 			$caps['activate_plugins'] = false;
 		}
 
@@ -484,6 +485,10 @@ class MustUse {
 		$all_plugins           = \get_option( 'active_plugins' );
 		$this->override_active = true;
 
+		if ( ! $all_plugins ) {
+			$all_plugins = array();
+		}
+
 		return $all_plugins;
 	}
 
@@ -495,7 +500,10 @@ class MustUse {
 	public function is_troubleshooting() {
 		// Check if a session cookie to disable plugins has been set.
 		if ( isset( $_COOKIE['wp-health-check-disable-plugins'] ) ) {
-			$_GET['health-check-disable-plugin-hash'] = $_COOKIE['wp-health-check-disable-plugins'] . md5( $_SERVER['REMOTE_ADDR'] );
+			$client_ip = \filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP );
+
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- We are intentionally not sanitizing the cookie, as we are using it to populate a global variable which is sanitized correctly later, and this would lead to potential double-sanitizing.
+			$_GET['health-check-disable-plugin-hash'] = $_COOKIE['wp-health-check-disable-plugins'] . md5( $client_ip );
 		}
 
 		// If the disable hash isn't set, no need to interact with things.
@@ -508,7 +516,7 @@ class MustUse {
 		}
 
 		// If the plugin hash is not valid, we also break out
-		if ( $this->disable_hash !== $_GET['health-check-disable-plugin-hash'] ) {
+		if ( \sanitize_text_field( \wp_unslash( $_GET['health-check-disable-plugin-hash'] ) ) !== $this->disable_hash ) {
 			return false;
 		}
 
@@ -529,7 +537,7 @@ class MustUse {
 
 		// If we've received a comma-separated list of allowed plugins, we'll add them to the array of allowed plugins.
 		if ( isset( $_GET['health-check-allowed-plugins'] ) ) {
-			$this->allowed_plugins = explode( ',', $_GET['health-check-allowed-plugins'] );
+			$this->allowed_plugins = explode( ',', \sanitize_text_field( \wp_unslash( $_GET['health-check-allowed-plugins'] ) ) );
 		}
 
 		foreach ( $plugins as $plugin_no => $plugin_path ) {
@@ -700,8 +708,11 @@ class MustUse {
 	 */
 	private function get_clean_url( $url = null ) {
 		if ( ! $url ) {
+			$http_host   = \filter_input( INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_STRING );
+			$request_uri = \filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
+
 			// The full URL for the current request.
-			$raw_url = ( \is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$raw_url = ( \is_ssl() ? 'https://' : 'http://' ) . $http_host . $request_uri;
 
 			// We prepare the `REQUEST_URI` entry our selves, to account for WP installs in subdirectories or similar.
 			$request_uri = str_ireplace( \site_url( '/' ), '', $raw_url );
@@ -731,10 +742,10 @@ class MustUse {
 			md5( implode( ',', $assets ) )
 		);
 
-		$nonce = ( isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : false );
+		$nonce = ( isset( $_GET['_wpnonce'] ) ? \sanitize_text_field( \wp_unslash( $_GET['_wpnonce'] ) ) : false );
 
 		// Validate nonce.
-		if ( ! isset( $_GET['_wpnonce'] ) || ! \wp_verify_nonce( $nonce, $nonce_action ) ) {
+		if ( false === $nonce || ! \wp_verify_nonce( $nonce, $nonce_action ) ) {
 			return false;
 		}
 
@@ -825,14 +836,14 @@ class MustUse {
 		// Enable an individual plugin.
 		if ( isset( $_GET['health-check-troubleshoot-enable-plugin'] ) ) {
 			// Validate the cache or return early.
-			if ( ! $this->validate_action_nonce( 'health-check-troubleshoot-enable-plugin', array( $_GET['health-check-troubleshoot-enable-plugin'] ) ) ) {
+			if ( ! $this->validate_action_nonce( 'health-check-troubleshoot-enable-plugin', array( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) ) ) ) ) {
 				$this->show_nonce_validator   = true;
 				$this->nonce_validator_fields = array(
 					'_wpnonce' => $this->prepare_action_nonce(
 						'health-check-troubleshoot-enable-plugin',
-						array( $_GET['health-check-troubleshoot-enable-plugin'] )
+						array( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) ) )
 					),
-					'health-check-troubleshoot-enable-plugin' => implode( ',', array( $_GET['health-check-troubleshoot-enable-plugin'] ) ),
+					'health-check-troubleshoot-enable-plugin' => implode( ',', array( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) ) ) ),
 				);
 
 				$this->nonce_validator_details = sprintf(
@@ -842,7 +853,7 @@ class MustUse {
 						\__( 'You were attempting to <strong>enable</strong> the %s plugin while troubleshooting.', 'troubleshooting' ),
 						sprintf(
 							'<strong>%s</strong>',
-							\esc_html( $_GET['health-check-troubleshoot-enable-plugin'] )
+							\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) ) )
 						)
 					)
 				);
@@ -852,7 +863,9 @@ class MustUse {
 
 			$old_allowed_plugins = $this->allowed_plugins;
 
-			$this->allowed_plugins[ (string) $_GET['health-check-troubleshoot-enable-plugin'] ] = (string) $_GET['health-check-troubleshoot-enable-plugin'];
+			$new_allowed_plugin_slug = (string) \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) );
+
+			$this->allowed_plugins[ $new_allowed_plugin_slug ] = $new_allowed_plugin_slug;
 
 			\update_option( 'health-check-allowed-plugins', $this->allowed_plugins );
 
@@ -861,7 +874,7 @@ class MustUse {
 					sprintf(
 						// translators: %s: The plugin slug.
 						'The %s plugin was forcefully enabled.',
-						esc_html( $_GET['health-check-troubleshoot-enable-plugin'] )
+						esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) ) )
 					),
 					'info'
 				);
@@ -874,15 +887,15 @@ class MustUse {
 				$notice = sprintf(
 					// Translators: %1$s: The link-button markup to force enable the plugin. %2$s: The force-enable link markup.
 					\__( 'When enabling the plugin, %1$s, a site failure occurred. Because of this the change was automatically reverted. %2$s', 'troubleshooting' ),
-					\esc_html( $_GET['health-check-troubleshoot-enable-plugin'] ),
+					\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) ) ),
 					sprintf(
 						'<a href="%s" aria-label="%s">%s</a>',
 						\esc_url(
 							\add_query_arg(
 								array(
-									'health-check-troubleshoot-enable-plugin' => $_GET['health-check-troubleshoot-enable-plugin'],
+									'health-check-troubleshoot-enable-plugin' => \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) ),
 									'health-check-plugin-force-enable' => 'true',
-									'_wpnonce' => $this->prepare_action_nonce( 'health-check-troubleshoot-enable-plugin', array( $_GET['health-check-troubleshoot-enable-plugin'] ) ),
+									'_wpnonce' => $this->prepare_action_nonce( 'health-check-troubleshoot-enable-plugin', array( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) ) ) ),
 								),
 								$this->get_clean_url()
 							)
@@ -891,7 +904,7 @@ class MustUse {
 							sprintf(
 								// translators: %s: Plugin name.
 								\__( 'Force-enable the plugin, %s, even though the loopback checks failed.', 'troubleshooting' ),
-								\esc_html( $_GET['health-check-troubleshoot-enable-plugin'] )
+								\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-enable-plugin'] ) ) )
 							)
 						),
 						\__( 'Enable anyway', 'troubleshooting' )
@@ -911,14 +924,14 @@ class MustUse {
 		// Disable an individual plugin.
 		if ( isset( $_GET['health-check-troubleshoot-disable-plugin'] ) ) {
 			// Validate the cache or return early.
-			if ( ! $this->validate_action_nonce( 'health-check-troubleshoot-disable-plugin', array( $_GET['health-check-troubleshoot-disable-plugin'] ) ) ) {
+			if ( ! $this->validate_action_nonce( 'health-check-troubleshoot-disable-plugin', array( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ) ) ) ) {
 				$this->show_nonce_validator   = true;
 				$this->nonce_validator_fields = array(
 					'_wpnonce' => $this->prepare_action_nonce(
 						'health-check-troubleshoot-disable-plugin',
-						array( $_GET['health-check-troubleshoot-disable-plugin'] )
+						array( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ) )
 					),
-					'health-check-troubleshoot-disable-plugin' => implode( ',', array( $_GET['health-check-troubleshoot-disable-plugin'] ) ),
+					'health-check-troubleshoot-disable-plugin' => implode( ',', array( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ) ) ),
 				);
 
 				$this->nonce_validator_details = sprintf(
@@ -928,7 +941,7 @@ class MustUse {
 						\__( 'You were attempting to <strong>disable</strong> the %s plugin while troubleshooting.', 'troubleshooting' ),
 						sprintf(
 							'<strong>%s</strong>',
-							\esc_html( $_GET['health-check-troubleshoot-disable-plugin'] )
+							\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ) )
 						)
 					)
 				);
@@ -937,7 +950,7 @@ class MustUse {
 			}
 			$old_allowed_plugins = $this->allowed_plugins;
 
-			unset( $this->allowed_plugins[ $_GET['health-check-troubleshoot-disable-plugin'] ] );
+			unset( $this->allowed_plugins[ \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ) ] );
 
 			\update_option( 'health-check-allowed-plugins', $this->allowed_plugins );
 
@@ -946,7 +959,7 @@ class MustUse {
 					sprintf(
 						// translators: %s: The plugin slug.
 						'The %s plugin was forcefully disabled.',
-						\esc_html( $_GET['health-check-troubleshoot-disable-plugin'] )
+						\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ) )
 					),
 					'info'
 				);
@@ -959,15 +972,15 @@ class MustUse {
 				$notice = sprintf(
 					// Translators: %1$s: The plugin slug that was disabled. %2$s: The force-disable link markup.
 					\__( 'When disabling the plugin, %1$s, a site failure occurred. Because of this the change was automatically reverted. %2$s', 'troubleshooting' ),
-					\esc_html( $_GET['health-check-troubleshoot-disable-plugin'] ),
+					\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ) ),
 					sprintf(
 						'<a href="%1$s" aria-label="%2$s">%3$s</a>',
 						\esc_url(
 							\add_query_arg(
 								array(
-									'health-check-troubleshoot-disable-plugin' => $_GET['health-check-troubleshoot-disable-plugin'],
+									'health-check-troubleshoot-disable-plugin' => \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ),
 									'health-check-plugin-force-disable' => 'true',
-									'_wpnonce' => $this->prepare_action_nonce( 'health-check-troubleshoot-disable-plugin', array( $_GET['health-check-troubleshoot-disable-plugin'] ) ),
+									'_wpnonce' => $this->prepare_action_nonce( 'health-check-troubleshoot-disable-plugin', array( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ) ) ),
 								),
 								$this->get_clean_url()
 							)
@@ -976,7 +989,7 @@ class MustUse {
 							sprintf(
 								// translators: %s: Plugin name.
 								\__( 'Force-disable the plugin, %s, even though the loopback checks failed.', 'troubleshooting' ),
-								\esc_html( $_GET['health-check-troubleshoot-disable-plugin'] )
+								\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-disable-plugin'] ) ) )
 							)
 						),
 						\__( 'Disable anyway', 'troubleshooting' )
@@ -996,14 +1009,14 @@ class MustUse {
 		// Change the active theme for this session.
 		if ( isset( $_GET['health-check-change-active-theme'] ) ) {
 			// Validate the cache or return early.
-			if ( ! $this->validate_action_nonce( 'health-check-change-active-theme', array( $_GET['health-check-change-active-theme'] ) ) ) {
+			if ( ! $this->validate_action_nonce( 'health-check-change-active-theme', array( \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ) ) ) ) {
 				$this->show_nonce_validator   = true;
 				$this->nonce_validator_fields = array(
 					'_wpnonce'                         => $this->prepare_action_nonce(
 						'health-check-change-active-theme',
-						array( $_GET['health-check-change-active-theme'] )
+						array( \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ) )
 					),
-					'health-check-change-active-theme' => implode( ',', array( $_GET['health-check-change-active-theme'] ) ),
+					'health-check-change-active-theme' => implode( ',', array( \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ) ) ),
 				);
 
 				$this->nonce_validator_details = sprintf(
@@ -1013,7 +1026,7 @@ class MustUse {
 						\__( 'You were attempting to <strong>change the active theme</strong> to %s while troubleshooting.', 'troubleshooting' ),
 						sprintf(
 							'<strong>%s</strong>',
-							\esc_html( $_GET['health-check-change-active-theme'] )
+							\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ) )
 						)
 					)
 				);
@@ -1023,14 +1036,14 @@ class MustUse {
 
 			$old_theme = \get_option( 'health-check-current-theme' );
 
-			\update_option( 'health-check-current-theme', $_GET['health-check-change-active-theme'] );
+			\update_option( 'health-check-current-theme', \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ) );
 
 			if ( isset( $_GET['health-check-theme-force-switch'] ) ) {
 				$this->add_dashboard_notice(
 					sprintf(
 						// translators: %s: The theme slug.
 						'The theme was forcefully switched to %s.',
-						\esc_html( $_GET['health-check-change-active-theme'] )
+						\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ) )
 					),
 					'info'
 				);
@@ -1042,15 +1055,15 @@ class MustUse {
 				$notice = sprintf(
 					// Translators: %1$s: The theme slug that was switched to.. %2$s: The force-enable link markup.
 					\__( 'When switching the active theme to %1$s, a site failure occurred. Because of this we reverted the theme to the one you used previously. %2$s', 'troubleshooting' ),
-					\esc_html( $_GET['health-check-change-active-theme'] ),
+					\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ) ),
 					sprintf(
 						'<a href="%s" aria-label="%s">%s</a>',
 						\esc_url(
 							\add_query_arg(
 								array(
-									'health-check-change-active-theme' => $_GET['health-check-change-active-theme'],
+									'health-check-change-active-theme' => \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ),
 									'health-check-theme-force-switch' => 'true',
-									'_wpnonce' => $this->prepare_action_nonce( 'health-check-change-active-theme', array( $_GET['health-check-change-active-theme'] ) ),
+									'_wpnonce' => $this->prepare_action_nonce( 'health-check-change-active-theme', array( \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ) ) ),
 								),
 								$this->get_clean_url()
 							)
@@ -1059,7 +1072,7 @@ class MustUse {
 							sprintf(
 								// translators: %s: Plugin name.
 								\__( 'Force-switch to the %s theme, even though the loopback checks failed.', 'troubleshooting' ),
-								\esc_html( $_GET['health-check-change-active-theme'] )
+								\esc_html( \sanitize_text_field( \wp_unslash( $_GET['health-check-change-active-theme'] ) ) )
 							)
 						),
 						\__( 'Switch anyway', 'troubleshooting' )

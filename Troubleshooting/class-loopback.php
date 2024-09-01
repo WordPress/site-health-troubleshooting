@@ -270,8 +270,12 @@ class Loopback {
 		$loopback_hash = md5( (string) \wp_rand() );
 		\update_option( 'health-check-disable-plugin-hash', $loopback_hash );
 
-		$plugin_slug = explode( '/', $_POST['plugin'] );
-		$plugin_slug = $plugin_slug[0];
+		$plugin_slug = null;
+
+		if ( isset( $_POST['plugin'] ) ) {
+			$plugin_slug = explode( '/', \sanitize_text_field( \wp_unslash( $_POST['plugin'] ) ) );
+			$plugin_slug = $plugin_slug[0];
+		}
 
 		$single_test = self::can_perform_loopback( $loopback_hash, $plugin_slug );
 

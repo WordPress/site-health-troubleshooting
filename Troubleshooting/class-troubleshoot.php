@@ -68,7 +68,10 @@ class Troubleshoot {
 		}
 
 		// Don't enable troubleshooting if nonces are missing or do not match.
-		if ( ! isset( $_POST['_wpnonce'] ) || ! \wp_verify_nonce( $_POST['_wpnonce'], 'health-check-enable-troubleshooting' ) ) {
+		if (
+			! isset( $_POST['_wpnonce'] )
+			|| ! \wp_verify_nonce( \sanitize_text_field( \wp_unslash( $_POST['_wpnonce'] ) ), 'health-check-enable-troubleshooting' )
+		) {
 			return;
 		}
 
@@ -100,7 +103,10 @@ class Troubleshoot {
 		}
 
 		// Don't enable troubleshooting for an individual plugin if the nonce is missing or invalid.
-		if ( ! isset( $_GET['_wpnonce'] ) || ! \wp_verify_nonce( $_GET['_wpnonce'], 'health-check-troubleshoot-plugin-' . $_GET['health-check-troubleshoot-plugin'] ) ) {
+		if (
+			! isset( $_GET['_wpnonce'] )
+			|| ! \wp_verify_nonce( \sanitize_text_field( \wp_unslash( $_GET['_wpnonce'] ) ), 'health-check-troubleshoot-plugin-' . \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-plugin'] ) ) )
+		) {
 			return;
 		}
 
@@ -133,9 +139,11 @@ class Troubleshoot {
 			return;
 		}
 
+		$sanitized_plugin_slug = (string) \sanitize_text_field( \wp_unslash( $_GET['health-check-troubleshoot-plugin'] ) );
+
 		self::initiate_troubleshooting_mode(
 			array(
-				(string) $_GET['health-check-troubleshoot-plugin'] => (string) $_GET['health-check-troubleshoot-plugin'],
+				$sanitized_plugin_slug => $sanitized_plugin_slug,
 			)
 		);
 
@@ -208,10 +216,11 @@ class Troubleshoot {
 		}
 
 		$loopback_hash = md5( (string) \wp_rand() );
+		$client_ip     = \filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP );
 
 		\update_option( 'health-check-allowed-plugins', $allowed_plugins );
 
-		\update_option( 'health-check-disable-plugin-hash', $loopback_hash . md5( $_SERVER['REMOTE_ADDR'] ) );
+		\update_option( 'health-check-disable-plugin-hash', $loopback_hash . md5( $client_ip ) );
 
 		setcookie( 'wp-health-check-disable-plugins', $loopback_hash, 0, \COOKIEPATH, \COOKIE_DOMAIN );
 	}
@@ -424,7 +433,11 @@ class Troubleshoot {
 	 * @return void
 	 */
 	static function show_enable_troubleshoot_form() {
-		if ( isset( $_POST['health-check-troubleshoot-mode'] ) && \wp_verify_nonce( $_POST['_wpnonce'], 'health-check-enable-troubleshooting' ) ) {
+		if (
+			isset( $_POST['health-check-troubleshoot-mode'] )
+			&& isset( $_POST['_wpnonce'] )
+			&& \wp_verify_nonce( \sanitize_text_field( \wp_unslash( $_POST['_wpnonce'] ) ), 'health-check-enable-troubleshooting' )
+		) {
 			if ( self::mu_plugin_exists() ) {
 				if ( ! self::maybe_update_must_use_plugin() ) {
 					return;
