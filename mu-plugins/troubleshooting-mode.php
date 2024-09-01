@@ -1449,7 +1449,7 @@ class MustUse {
 												sprintf(
 													// translators: %s: Plugin name.
 													\__( 'Disable the plugin, %s, while troubleshooting.', 'troubleshooting' ),
-													$plugin_data['Name']
+													\esc_html( $plugin_data['Name'] )
 												)
 											),
 											\esc_html__( 'Disable', 'troubleshooting' )
@@ -1470,7 +1470,7 @@ class MustUse {
 												sprintf(
 													// translators: %s: Plugin name.
 													\__( 'Enable the plugin, %s, while troubleshooting.', 'troubleshooting' ),
-													$plugin_data['Name']
+													\esc_html( $plugin_data['Name'] )
 												)
 											),
 											\esc_html__( 'Enable', 'troubleshooting' )
@@ -1548,7 +1548,7 @@ class MustUse {
 											sprintf(
 												// translators: %s: Theme name.
 												\__( 'Switch the active theme to %s', 'troubleshooting' ),
-												$theme['name']
+												\esc_html( $theme['name'] )
 											)
 										),
 										\esc_html__( 'Switch to this theme', 'troubleshooting' )
@@ -1558,7 +1558,7 @@ class MustUse {
 										'%s %s',
 										// translators: Prefix for the active theme in a listing.
 										( $theme['active'] ? \esc_html__( 'Active:', 'troubleshooting' ) : '' ),
-										$theme['name']
+										\esc_html( $theme['name'] )
 									);
 
 									if ( ! $theme['active'] ) {
