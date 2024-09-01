@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class Health_Check_Loopback
+ * Class Loopback
  */
 class Loopback {
 	/**
@@ -110,16 +110,16 @@ class Loopback {
 	 * Perform the loopback check, but ensure no plugins are enabled when we do so.
 	 *
 	 * @uses ob_start()
-	 * @uses Health_Check_Troubleshoot::mu_plugin_exists()
-	 * @uses Health_Check::get_filesystem_credentials()
-	 * @uses Health_Check_Troubleshoot::setup_must_use_plugin()
-	 * @uses Health_Check_Troubleshoot::maybe_update_must_use_plugin()
+	 * @uses Troubleshoot::mu_plugin_exists()
+	 * @uses Troubleshoot::get_filesystem_credentials()
+	 * @uses Troubleshoot::setup_must_use_plugin()
+	 * @uses Troubleshoot::maybe_update_must_use_plugin()
 	 * @uses ob_get_clean()
 	 * @uses wp_send_json_error()
 	 * @uses md5()
 	 * @uses rand()
 	 * @uses update_option()
-	 * @uses Health_Check_Loopback::can_perform_loopback()
+	 * @uses self::can_perform_loopback()
 	 * @uses sprintf()
 	 * @uses esc_attr()
 	 * @uses esc_html__()
@@ -220,9 +220,9 @@ class Loopback {
 	 * This function will perform the loopback check, without any plugins, then conditionally enables one plugin at a time.
 	 *
 	 * @uses ob_start()
-	 * @uses Health_Check_Troubleshoot::mu_plugin_exists()
-	 * @uses Health_Check::get_filesystem_credentials()
-	 * @uses Health_Check_Troubleshoot::setup_must_use_plugin()
+	 * @uses Troubleshoot::mu_plugin_exists()
+	 * @uses Troubleshoot::get_filesystem_credentials()
+	 * @uses Troubleshoot::setup_must_use_plugin()
 	 * @uses ob_get_clean()
 	 * @uses wp_send_json_error()
 	 * @uses delete_option()
@@ -231,7 +231,7 @@ class Loopback {
 	 * @uses rand()
 	 * @uses update_option()
 	 * @uses explode()
-	 * @uses Health_Check_Loopback::can_perform_loopback()
+	 * @uses self::can_perform_loopback()
 	 * @uses sprintf()
 	 * @uses esc_attr()
 	 * @uses esc_html__()

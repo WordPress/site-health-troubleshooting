@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class Health_Check_Troubleshoot
+ * Class Troubleshoot
  */
 class Troubleshoot {
 
@@ -323,7 +323,7 @@ class Troubleshoot {
 	/**
 	 * Output a notice if our Troubleshooting Mode has been initiated.
 	 *
-	 * @uses Health_Check::display_notice()
+	 * @uses self::display_notice()
 	 * @uses sprintf()
 	 * @uses esc_html__()
 	 * @uses esc_url()
@@ -423,7 +423,7 @@ class Troubleshoot {
 	 * @uses self::mu_plugin_exists()
 	 * @uses self::maybe_update_must_use_plugin()
 	 * @uses self::session_started()
-	 * @uses Health_Check::get_filesystem_credentials()
+	 * @uses self::get_filesystem_credentials()
 	 * @uses self::setup_must_use_plugin()
 	 * @uses MustUse::is_troubleshooting()
 	 * @uses esc_url()

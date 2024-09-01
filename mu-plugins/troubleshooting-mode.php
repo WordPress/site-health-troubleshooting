@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Set the MU plugin version.
-define( 'HEALTH_CHECK_TROUBLESHOOTING_MODE_PLUGIN_VERSION', '1.0.0' );
+define( 'TROUBLESHOOTING_MODE_PLUGIN_VERSION', '1.0.0' );
 
 class MustUse {
 	/**
