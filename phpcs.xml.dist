@@ -3,6 +3,7 @@
     <description>Apply WordPress Coding Standards to all Health Check plugin files.</description>
 
     <config name="installed_paths" value="vendor/wp-coding-standards/wpcs" />
+	<config name="text_domain" value="troubleshooting" />
 
     <rule ref="WordPress-Core"/>
 
