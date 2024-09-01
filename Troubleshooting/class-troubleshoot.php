@@ -267,7 +267,7 @@ class Troubleshoot {
 		}
 
 		// Copy the must-use plugin to the local directory.
-		if ( ! $wp_filesystem->copy( \trailingslashit( TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php', \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
+		if ( ! $wp_filesystem->copy( \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php', \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
 			self::display_notice( \esc_html__( 'We were unable to copy the plugin file required to enable the Troubleshooting Mode.', 'troubleshooting' ), 'error' );
 			return false;
 		}
@@ -302,7 +302,7 @@ class Troubleshoot {
 			return false;
 		}
 
-		$current = \get_plugin_data( \trailingslashit( TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php' );
+		$current = \get_plugin_data( \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php' );
 		$active  = \get_plugin_data( \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' );
 
 		$current_version = $current['Version'];
@@ -311,7 +311,7 @@ class Troubleshoot {
 		if ( version_compare( $current_version, $active_version, '>' ) ) {
 			global $wp_filesystem;
 
-			if ( ! $wp_filesystem->copy( \trailingslashit( TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php', \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php', true ) ) {
+			if ( ! $wp_filesystem->copy( \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php', \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php', true ) ) {
 				self::display_notice( \esc_html__( 'We were unable to replace the plugin file required to enable the Troubleshooting Mode.', 'troubleshooting' ), 'error' );
 				return false;
 			}

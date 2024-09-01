@@ -20,8 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'We\'re sorry, but you can not directly access this file.' );
 }
 
-define( 'TROUBLESHOOTING_PLUGIN_FILE', __FILE__ );
-define( 'TROUBLESHOOTING_PLUGIN_DIRECTORY', __DIR__ );
+define( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_FILE', __FILE__ );
+define( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY', __DIR__ );
 
 require_once __DIR__ . '/Troubleshooting/class-loopback.php';
 require_once __DIR__ . '/Troubleshooting/class-troubleshoot.php';
