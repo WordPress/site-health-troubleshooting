@@ -604,11 +604,11 @@ class MustUse {
 	 * Attempt to set one of the default themes, or a theme of the users choosing, as the active one
 	 * during Troubleshooting Mode.
 	 *
-	 * @param string $default
+	 * @param bool|string $default
 	 *
-	 * @return string
+	 * @return bool|string
 	 */
-	function health_check_troubleshoot_theme_stylesheet( string $default ) : string {
+	function health_check_troubleshoot_theme_stylesheet( $default ) {
 		if ( $this->self_fetching_theme ) {
 			return $default;
 		}
