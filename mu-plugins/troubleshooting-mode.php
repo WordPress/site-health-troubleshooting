@@ -250,7 +250,7 @@ class MustUse {
 	 *
 	 * @return array<string, bool>
 	 */
-	public function remove_plugin_theme_install( array $caps ) : array {
+	public function remove_plugin_theme_install( $caps ) {
 		$caps['switch_themes'] = false;
 
 		/*
@@ -290,7 +290,7 @@ class MustUse {
 	 *
 	 * @return string
 	 */
-	public function handle_plugin_bulk_actions( string $sendback, string $action, array $plugins ) : string {
+	public function handle_plugin_bulk_actions( $sendback, $action, $plugins ) {
 		if ( ! $this->is_troubleshooting() && 'health-check-troubleshoot' !== $action ) {
 			return $sendback;
 		}
@@ -380,7 +380,7 @@ class MustUse {
 	 *
 	 * @return array<string, string>
 	 */
-	public function remove_plugin_bulk_actions( array $actions ) : array {
+	public function remove_plugin_bulk_actions( $actions ) {
 		if ( ! $this->is_troubleshooting() ) {
 			$actions['health-check-troubleshoot'] = __( 'Troubleshoot', 'troubleshooting' );
 
@@ -409,7 +409,7 @@ class MustUse {
 	 *
 	 * @return array<string, string>
 	 */
-	public function plugin_actions( array $actions, string $plugin_file, array $plugin_data, string $context ) : array {
+	public function plugin_actions( $actions, $plugin_file, $plugin_data, $context ) {
 		if ( 'mustuse' === $context ) {
 			return $actions;
 		}
@@ -480,7 +480,7 @@ class MustUse {
 	 *
 	 * @return array<int, string> Array of active plugins.
 	 */
-	public function get_unfiltered_plugin_list() : array {
+	public function get_unfiltered_plugin_list() {
 		$this->override_active = false;
 		$all_plugins           = \get_option( 'active_plugins' );
 		$this->override_active = true;
@@ -530,7 +530,7 @@ class MustUse {
 	 *
 	 * @return array<int, string>
 	 */
-	function health_check_loopback_test_disable_plugins( array $plugins ) : array {
+	function health_check_loopback_test_disable_plugins( $plugins ) {
 		if ( ! $this->is_troubleshooting() || ! $this->override_active ) {
 			return $plugins;
 		}
