@@ -13,3 +13,4 @@ if ( ! defined( 'COOKIE_DOMAIN' ) ) { define( 'COOKIE_DOMAIN', 'localhost' ); }
 if ( ! defined( 'COOKIEPATH' ) ) { define( 'COOKIEPATH', '/' ); }
 
 if ( ! defined( 'TROUBLESHOOTING_PLUGIN_DIRECTORY' ) ) { define( 'TROUBLESHOOTING_PLUGIN_DIRECTORY', WP_PLUGIN_DIR . '/troubleshooting' ); }
+if ( ! defined( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY' ) ) { define( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY', WP_PLUGIN_DIR . '/troubleshooting' ); }

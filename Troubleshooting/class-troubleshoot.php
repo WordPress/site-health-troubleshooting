@@ -162,10 +162,10 @@ class Troubleshoot {
 	 */
 	public function troubleshoot_plugin_action( $actions, $plugin_file, $plugin_data, $context ) {
 		// Ensure data types are as expected.
-		$actions = Types::ensure( $actions, 'array' );
+		$actions     = Types::ensure( $actions, 'array' );
 		$plugin_file = Types::ensure( $plugin_file, 'string' );
 		$plugin_data = Types::ensure( $plugin_data, 'array' );
-		$context = Types::ensure( $context, 'string' );
+		$context     = Types::ensure( $context, 'string' );
 
 		// Don't add anything if this is a Must-Use plugin, we can't touch those.
 		if ( 'mustuse' === $context ) {
@@ -272,10 +272,16 @@ class Troubleshoot {
 			}
 		}
 
-		// Copy the must-use plugin to the local directory.
-		if ( ! $wp_filesystem->copy( \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php', \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
-			self::display_notice( \esc_html__( 'We were unable to copy the plugin file required to enable the Troubleshooting Mode.', 'troubleshooting' ), 'error' );
-			return false;
+		// phpcs:ignore PHP_CodeSniffer.Files.ConstantNotFound -- `SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY` is defined in the plugin root file `troubleshooting.php`.
+		$mu_file = \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php';
+
+		// Attempt to symlink the must-use plugin first, as the preferred method.
+		if ( ! \symlink( $mu_file, \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
+			// If the symlink fails, try to copy the file instead.
+			if ( ! $wp_filesystem->copy( $mu_file, \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
+				self::display_notice( \esc_html__( 'We were unable to copy the plugin file required to enable the Troubleshooting Mode.', 'troubleshooting' ), 'error' );
+				return false;
+			}
 		}
 
 		if ( $redirect ) {
@@ -308,7 +314,10 @@ class Troubleshoot {
 			return false;
 		}
 
-		$current = \get_plugin_data( \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php' );
+		// phpcs:ignore PHP_CodeSniffer.Files.ConstantNotFound -- `SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY` is defined in the plugin root file `troubleshooting.php`.
+		$mu_file = \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php';
+
+		$current = \get_plugin_data( $mu_file );
 		$active  = \get_plugin_data( \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' );
 
 		$current_version = $current['Version'];
@@ -317,7 +326,7 @@ class Troubleshoot {
 		if ( version_compare( $current_version, $active_version, '>' ) ) {
 			global $wp_filesystem;
 
-			if ( ! $wp_filesystem->copy( \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php', \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php', true ) ) {
+			if ( ! $wp_filesystem->copy( $mu_file, \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php', true ) ) {
 				self::display_notice( \esc_html__( 'We were unable to replace the plugin file required to enable the Troubleshooting Mode.', 'troubleshooting' ), 'error' );
 				return false;
 			}

@@ -18,7 +18,7 @@ class Types {
 	 */
 	public static function ensure( $value, $type, $callback = null ) {
 		// If the type matches, or the type can be `mixed`, immediately return it.
-		if ( $type === \gettype( $value ) || 'mixed' === $type ) {
+		if ( \gettype( $value ) === $type || 'mixed' === $type ) {
 			return $value;
 		}
 
