@@ -1576,11 +1576,11 @@ class MustUse {
 													_n(
 														'Show %d remaining theme',
 														'Show %d remaining themes',
-														( is_countable( $themes ) ? ( count( $themes ) - 5 ) : 0 ),
+														( count( $themes ) - 5 ),
 														'troubleshooting'
 													)
 												),
-												\esc_html( (string) ( is_countable( $themes ) ? ( count( $themes ) - 5 ) : 0 ) )
+												\esc_html( (string) ( count( $themes ) - 5 ) )
 											)
 										);
 									}
