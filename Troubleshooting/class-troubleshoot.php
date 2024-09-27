@@ -272,10 +272,13 @@ class Troubleshoot {
 			}
 		}
 
-		// Copy the must-use plugin to the local directory.
-		if ( ! $wp_filesystem->copy( \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php', \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
-			self::display_notice( \esc_html__( 'We were unable to copy the plugin file required to enable the Troubleshooting Mode.', 'troubleshooting' ), 'error' );
-			return false;
+		// Attempt to symlink the must-use plugin first, as the preferred method.
+		if ( ! \symlink( \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php', \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
+			// If the symlink fails, try to copy the file instead.
+			if ( ! $wp_filesystem->copy( \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php', \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
+				self::display_notice( \esc_html__( 'We were unable to copy the plugin file required to enable the Troubleshooting Mode.', 'troubleshooting' ), 'error' );
+				return false;
+			}
 		}
 
 		if ( $redirect ) {
