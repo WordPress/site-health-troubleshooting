@@ -23,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_FILE', __FILE__ );
 define( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY', __DIR__ );
 
+require_once __DIR__ . '/Troubleshooting/class-types.php';
 require_once __DIR__ . '/Troubleshooting/class-loopback.php';
 require_once __DIR__ . '/Troubleshooting/class-troubleshoot.php';
 

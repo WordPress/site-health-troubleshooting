@@ -160,7 +160,13 @@ class Troubleshoot {
 	 *
 	 * @return array<string, string>
 	 */
-	public function troubleshoot_plugin_action( array $actions, string $plugin_file, array $plugin_data, string $context ) {
+	public function troubleshoot_plugin_action( $actions, $plugin_file, $plugin_data, $context ) {
+		// Ensure data types are as expected.
+		$actions = Types::ensure( $actions, 'array' );
+		$plugin_file = Types::ensure( $plugin_file, 'string' );
+		$plugin_data = Types::ensure( $plugin_data, 'array' );
+		$context = Types::ensure( $context, 'string' );
+
 		// Don't add anything if this is a Must-Use plugin, we can't touch those.
 		if ( 'mustuse' === $context ) {
 			return $actions;
