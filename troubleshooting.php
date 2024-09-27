@@ -26,27 +26,29 @@ define( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY', __DIR__ );
 /**
  * Autoloader to ensure all features needed by the Troubleshooting plugin are available.
  */
-spl_autoload_register( function( $class ) {
-	$prefix = 'SiteHealth\\Troubleshooting\\';
-	$base_dir = WP_PLUGIN_DIR . '/troubleshooting/Troubleshooting/';
+spl_autoload_register(
+	function( $class ) {
+		$prefix   = 'SiteHealth\\Troubleshooting\\';
+		$base_dir = WP_PLUGIN_DIR . '/troubleshooting/Troubleshooting/';
 
-	if ( 0 !== strpos( $class, $prefix ) ) {
-		return;
+		if ( 0 !== strpos( $class, $prefix ) ) {
+			return;
+		}
+
+		$class = str_replace( $prefix, '', $class );
+
+		// Classnames are lowercase after the WordPress coding standards.
+		$class = strtolower( $class );
+
+		$file_path = $base_dir . 'class-' . $class . '.php';
+
+		if ( ! file_exists( $file_path ) || 0 !== \validate_file( $file_path ) ) {
+			return;
+		}
+
+		require_once $file_path;
 	}
-
-	$class = str_replace( $prefix, '', $class );
-
-	// Classnames are lowercase after the WordPress coding standards.
-	$class = strtolower( $class );
-
-	$file_path = $base_dir . 'class-' . $class . '.php';
-
-	if ( ! file_exists( $file_path ) || 0 !== \validate_file( $file_path ) ) {
-		return;
-	}
-
-	require_once $file_path;
-} );
+);
 
 /**
  * Adds the Tools tab to the Site Health page.
