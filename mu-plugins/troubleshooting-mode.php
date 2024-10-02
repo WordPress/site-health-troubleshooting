@@ -2,7 +2,7 @@
 /*
 	Plugin Name: Troubleshooting Mode
 	Description: Conditionally disabled themes or plugins on your site for a given session, used to rule out conflicts during troubleshooting.
-	Version: 1.0.0
+	Version: 1.0.1
  */
 
 namespace SiteHealth\Troubleshooting;
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Set the MU plugin version.
-define( 'TROUBLESHOOTING_MODE_PLUGIN_VERSION', '1.0.0' );
+define( 'TROUBLESHOOTING_MODE_PLUGIN_VERSION', '1.0.1' );
 
 class MustUse {
 	/**

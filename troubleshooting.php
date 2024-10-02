@@ -9,7 +9,7 @@
  * Plugin URI: https://wordpress.org/plugins/troubleshooting/
  * Description: Checks the health of your WordPress install.
  * Author: Clorith
- * Version: 1.0.0
+ * Version: 1.0.1
  * Text Domain: troubleshooting
  * License: GPLv2 or later
  */

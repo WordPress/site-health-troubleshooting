@@ -4,7 +4,7 @@ Contributors: Clorith
 Requires at least: 5.8
 Requires PHP: 7.1
 Tested up to: 6.6
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,5 +39,10 @@ Yes, the plugin is open source and available on the [WordPress/site-health-troub
 
 = Changelog ==
 
-= 1.0.0 (<date TBD>)
+= 1.0.1 (2024-10-02) =
+* Fixed: Remove some strict typecasting on filters where plugins may return values WordPress core does not expect, to avoid causing fatal errors.
+* Fixed: Removed some more strict typecasting causing issues when switching between a block and non-block theme in troubleshooting mode.
+* Improvement: Made the plugin attempt to use symlinks instead of copying files when setting up the mu-plugin.
+
+= 1.0.0 (2024-09-21)
 * Initial release
