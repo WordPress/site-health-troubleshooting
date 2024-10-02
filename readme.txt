@@ -37,7 +37,7 @@ It is recommended to clear your caches after completing your troubleshooting, th
 
 Yes, the plugin is open source and available on the [WordPress/site-health-troubleshooting GitHub repository](https://github.com/wordpress/site-health-troubleshooting), and we welcome all types of contributions!
 
-= Changelog ==
+== Changelog ==
 
 = 1.0.1 (2024-10-02) =
 * Fixed: Remove some strict typecasting on filters where plugins may return values WordPress core does not expect, to avoid causing fatal errors.
