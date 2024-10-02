@@ -276,7 +276,7 @@ class Troubleshoot {
 		$mu_file = \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'mu-plugins/troubleshooting-mode.php';
 
 		// Attempt to symlink the must-use plugin first, as the preferred method.
-		if ( ! \symlink( $mu_file, \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
+		if ( ! function_exists( 'symlink' ) || ! \symlink( $mu_file, \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
 			// If the symlink fails, try to copy the file instead.
 			if ( ! $wp_filesystem->copy( $mu_file, \trailingslashit( \WPMU_PLUGIN_DIR ) . 'troubleshooting-mode.php' ) ) {
 				self::display_notice( \esc_html__( 'We were unable to copy the plugin file required to enable the Troubleshooting Mode.', 'troubleshooting' ), 'error' );
