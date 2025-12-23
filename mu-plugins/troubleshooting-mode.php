@@ -70,6 +70,7 @@ class MustUse {
 	 * @var string[]
 	 */
 	private $default_themes = array(
+		'twentytwentyfive',
 		'twentytwentyfour',
 		'twentytwentythree',
 		'twentytwentytwo',
