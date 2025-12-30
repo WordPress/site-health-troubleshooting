@@ -15,7 +15,7 @@
     "postcss-scss": "^4.0.9"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=24"
   },
   "license": "GPL-2.0+",
   "name": "troubleshooting",
