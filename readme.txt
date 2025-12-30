@@ -41,6 +41,7 @@ Yes, the plugin is open source and available on the [WordPress/site-health-troub
 
 = 1.0.2 (2025-12-30) =
 * Fixed: Translation warnings when using WordPress 6.7 or later.
+* Troubleshooting Mode: Add Twenty Twenty Five to the list of default themes.
 
 = 1.0.1 (2024-10-02) =
 * Fixed: Remove some strict typecasting on filters where plugins may return values WordPress core does not expect, to avoid causing fatal errors.

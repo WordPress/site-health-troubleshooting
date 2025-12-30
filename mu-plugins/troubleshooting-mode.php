@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Set the MU plugin version.
-define( 'TROUBLESHOOTING_MODE_PLUGIN_VERSION', '1.0.1' );
+define( 'TROUBLESHOOTING_MODE_PLUGIN_VERSION', '1.0.2' );
 
 class MustUse {
 	/**
