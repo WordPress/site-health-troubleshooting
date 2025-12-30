@@ -4,7 +4,7 @@ Contributors: Clorith
 Requires at least: 5.8
 Requires PHP: 7.1
 Tested up to: 6.9
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,9 @@ It is recommended to clear your caches after completing your troubleshooting, th
 Yes, the plugin is open source and available on the [WordPress/site-health-troubleshooting GitHub repository](https://github.com/wordpress/site-health-troubleshooting), and we welcome all types of contributions!
 
 == Changelog ==
+
+= 1.0.2 (2025-12-30) =
+* Fixed: Translation warnings when using WordPress 6.7 or later.
 
 = 1.0.1 (2024-10-02) =
 * Fixed: Remove some strict typecasting on filters where plugins may return values WordPress core does not expect, to avoid causing fatal errors.
