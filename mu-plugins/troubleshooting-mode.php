@@ -119,7 +119,7 @@ class MustUse {
 	 *
 	 * @return void
 	 */
-	public function init() : void {
+	public function init(): void {
 		\add_filter( 'option_active_plugins', array( $this, 'health_check_loopback_test_disable_plugins' ) );
 		\add_filter( 'option_active_sitewide_plugins', array( $this, 'health_check_loopback_test_disable_plugins' ) );
 
@@ -175,7 +175,7 @@ class MustUse {
 	 *
 	 * @return void
 	 */
-	public function load_options() : void {
+	public function load_options(): void {
 		$this->disable_hash    = \get_option( 'health-check-disable-plugin-hash', null );
 		$this->allowed_plugins = \get_option( 'health-check-allowed-plugins', array() );
 		$this->active_plugins  = $this->get_unfiltered_plugin_list();
@@ -187,7 +187,7 @@ class MustUse {
 	 *
 	 * @return void
 	 */
-	public function enqueue_assets() : void {
+	public function enqueue_assets(): void {
 		if ( ! \is_admin() ) {
 			return;
 		}
@@ -211,7 +211,7 @@ class MustUse {
 	 *
 	 * @return void
 	 */
-	public function prompt_install_default_theme() : void {
+	public function prompt_install_default_theme(): void {
 		if ( ! empty( $this->has_default_theme() ) ) {
 			return;
 		}
@@ -277,7 +277,7 @@ class MustUse {
 	 *
 	 * @return void
 	 */
-	public function plugin_activated() : void {
+	public function plugin_activated(): void {
 		// Force the database entry for active plugins if someone tried changing plugins while in Troubleshooting Mode.
 		\update_option( 'active_plugins', $this->active_plugins );
 	}
@@ -531,7 +531,7 @@ class MustUse {
 	 *
 	 * @return array<int, string>
 	 */
-	function health_check_loopback_test_disable_plugins( $plugins ) {
+	public function health_check_loopback_test_disable_plugins( $plugins ) {
 		if ( ! $this->is_troubleshooting() || ! $this->override_active ) {
 			return $plugins;
 		}
@@ -565,7 +565,7 @@ class MustUse {
 	 *
 	 * @return string
 	 */
-	function has_default_theme() {
+	public function has_default_theme() {
 		foreach ( $this->default_themes as $default_theme ) {
 			if ( $this->theme_exists( $default_theme ) ) {
 				return $default_theme;
@@ -582,7 +582,7 @@ class MustUse {
 	 *
 	 * @return bool
 	 */
-	function theme_exists( $theme_slug ) {
+	public function theme_exists( $theme_slug ) {
 		return is_dir( WP_CONTENT_DIR . '/themes/' . $theme_slug );
 	}
 
@@ -591,7 +591,7 @@ class MustUse {
 	 *
 	 * @return bool
 	 */
-	function override_theme() {
+	public function override_theme() {
 		if ( ! $this->is_troubleshooting() ) {
 			return false;
 		}
@@ -609,7 +609,7 @@ class MustUse {
 	 *
 	 * @return bool|string
 	 */
-	function health_check_troubleshoot_theme_stylesheet( $default ) {
+	public function health_check_troubleshoot_theme_stylesheet( $default ) {
 		if ( $this->self_fetching_theme ) {
 			return $default;
 		}
@@ -644,7 +644,7 @@ class MustUse {
 	 *
 	 * @return bool|string
 	 */
-	function health_check_troubleshoot_theme_template( $default ) {
+	public function health_check_troubleshoot_theme_template( $default ) {
 		if ( $this->self_fetching_theme ) {
 			return $default;
 		}
@@ -683,13 +683,13 @@ class MustUse {
 	 *
 	 * @return void
 	 */
-	function health_check_troubleshooter_mode_logout() {
+	public function health_check_troubleshooter_mode_logout() {
 		if ( isset( $_COOKIE['wp-health-check-disable-plugins'] ) ) {
 			$this->disable_troubleshooting_mode();
 		}
 	}
 
-	function disable_troubleshooting_mode() : void {
+	public function disable_troubleshooting_mode(): void {
 		unset( $_COOKIE['wp-health-check-disable-plugins'] );
 		setcookie( 'wp-health-check-disable-plugins', '', 0, COOKIEPATH, COOKIE_DOMAIN );
 		\delete_option( 'health-check-allowed-plugins' );
@@ -736,7 +736,7 @@ class MustUse {
 	 *
 	 * @return boolean
 	 */
-	private function validate_action_nonce( string $action, array $assets ) : bool {
+	private function validate_action_nonce( string $action, array $assets ): bool {
 		$nonce_action = sprintf(
 			'%s-%s',
 			$action,
@@ -761,7 +761,7 @@ class MustUse {
 	 *
 	 * @return string
 	 */
-	private function prepare_action_nonce( string $action, array $assets ) : string {
+	private function prepare_action_nonce( string $action, array $assets ): string {
 		$nonce_action = sprintf(
 			'%s-%s',
 			$action,
@@ -779,7 +779,7 @@ class MustUse {
 	 *
 	 * @return void
 	 */
-	function health_check_troubleshoot_get_captures() {
+	public function health_check_troubleshoot_get_captures() {
 		// Disable Troubleshooting Mode.
 		if ( isset( $_GET['health-check-disable-troubleshooting'] ) ) {
 			// Validate the cache or return early.
@@ -1091,7 +1091,7 @@ class MustUse {
 		}
 	}
 
-	private function add_dashboard_notice( string $message, string $severity = 'notice' ) : void {
+	private function add_dashboard_notice( string $message, string $severity = 'notice' ): void {
 		$notices = \get_option( 'health-check-dashboard-notices', array() );
 
 		$notices[] = array(
@@ -1114,7 +1114,7 @@ class MustUse {
 	 *
 	 * @return void
 	 */
-	function health_check_troubleshoot_menu_bar( $wp_menu ) {
+	public function health_check_troubleshoot_menu_bar( $wp_menu ) {
 		// We need some admin functions to make this a better user experience, so include that file.
 		if ( ! \is_admin() ) {
 			require_once \trailingslashit( ABSPATH ) . 'wp-admin/includes/plugin.php';
@@ -1282,7 +1282,7 @@ class MustUse {
 		);
 	}
 
-	public function test_site_state() : bool {
+	public function test_site_state(): bool {
 
 		// Make sure the Health_Check_Loopback class is available to us, in case the primary plugin is disabled.
 		if ( ! method_exists( 'SiteHealth\Troubleshooting\Loopback', 'can_perform_loopback' ) ) {
@@ -1307,7 +1307,7 @@ class MustUse {
 		return true;
 	}
 
-	public function dashboard_widget_scripts() : void {
+	public function dashboard_widget_scripts(): void {
 		// Check that it's the dashboard page, we don't want to disturb any other pages.
 		$screen = \get_current_screen();
 		if ( 'dashboard' !== $screen->id && 'plugins' !== $screen->id ) {
@@ -1315,7 +1315,7 @@ class MustUse {
 		}
 	}
 
-	public function display_dashboard_widget() : void {
+	public function display_dashboard_widget(): void {
 		// Check that it's the dashboard page, we don't want to disturb any other pages.
 		$screen = \get_current_screen();
 		if ( 'dashboard' !== $screen->id && 'plugins' !== $screen->id ) {
@@ -1671,7 +1671,7 @@ class MustUse {
 		<?php
 	}
 
-	public function nonce_confirmation_prompt() : void {
+	public function nonce_confirmation_prompt(): void {
 		// If the nonce-validator is disabled, do not show anything.
 		if ( ! $this->show_nonce_validator ) {
 			return;

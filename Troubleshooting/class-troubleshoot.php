@@ -45,7 +45,7 @@ class Troubleshoot {
 	public function __clone() {}
 	public function __wakeup() {}
 
-	public static function get_instance() : self {
+	public static function get_instance(): self {
 		if ( null === self::$instance ) {
 			self::$instance = new self();
 		}
@@ -216,7 +216,7 @@ class Troubleshoot {
 	 *
 	 * @return void
 	 */
-	static function initiate_troubleshooting_mode( array $allowed_plugins = array() ) : void {
+	public static function initiate_troubleshooting_mode( array $allowed_plugins = array() ): void {
 		if ( ! is_array( $allowed_plugins ) ) {
 			$allowed_plugins = (array) $allowed_plugins;
 		}
@@ -238,7 +238,7 @@ class Troubleshoot {
 	 *
 	 * @return bool
 	 */
-	static function mu_plugin_exists() {
+	public static function mu_plugin_exists() {
 		return file_exists( \WPMU_PLUGIN_DIR . '/troubleshooting-mode.php' );
 	}
 
@@ -261,7 +261,7 @@ class Troubleshoot {
 	 *
 	 * @return bool
 	 */
-	static function setup_must_use_plugin( bool $redirect = true ) : bool {
+	public static function setup_must_use_plugin( bool $redirect = true ): bool {
 		global $wp_filesystem;
 
 		// Make sure the `mu-plugins` directory exists.
@@ -306,7 +306,7 @@ class Troubleshoot {
 	 *
 	 * @return bool
 	 */
-	static function maybe_update_must_use_plugin() {
+	public static function maybe_update_must_use_plugin() {
 		if ( ! self::mu_plugin_exists() ) {
 			return false;
 		}
@@ -346,7 +346,7 @@ class Troubleshoot {
 	 *
 	 * @return void
 	 */
-	static function session_started() {
+	public static function session_started() {
 		self::display_notice(
 			sprintf(
 				'%s<br>%s',
@@ -370,7 +370,7 @@ class Troubleshoot {
 	 *
 	 * @return void
 	 */
-	static function display_notice( $message, $status = 'success' ) {
+	public static function display_notice( $message, $status = 'success' ) {
 		printf(
 			'<div class="notice notice-%s inline"><p>%s</p></div>',
 			\esc_attr( $status ),
@@ -383,7 +383,7 @@ class Troubleshoot {
 	 *
 	 * @return void
 	 */
-	public function admin_notices() : void {
+	public function admin_notices(): void {
 		foreach ( $this->admin_notices as $admin_notice ) {
 			printf(
 				'<div class="notice notice-%s"><p>%s</p></div>',
@@ -406,7 +406,7 @@ class Troubleshoot {
 	 *
 	 * @return bool
 	 */
-	static function get_filesystem_credentials( $args = array() ) : bool {
+	public static function get_filesystem_credentials( $args = array() ): bool {
 		$args = array_merge(
 			array(
 				'page' => 'health-check',
@@ -447,7 +447,7 @@ class Troubleshoot {
 	 *
 	 * @return void
 	 */
-	static function show_enable_troubleshoot_form() {
+	public static function show_enable_troubleshoot_form() {
 		if (
 			isset( $_POST['health-check-troubleshoot-mode'] )
 			&& isset( $_POST['_wpnonce'] )
