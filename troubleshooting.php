@@ -27,7 +27,7 @@ define( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY', __DIR__ );
  * Autoloader to ensure all features needed by the Troubleshooting plugin are available.
  */
 spl_autoload_register(
-	function( $class ) {
+	function ( $class ) {
 		$prefix   = 'SiteHealth\\Troubleshooting\\';
 		$base_dir = WP_PLUGIN_DIR . '/troubleshooting/Troubleshooting/';
 
@@ -57,7 +57,7 @@ spl_autoload_register(
  *
  * @return array<string, string>
  */
-function add_tools_tab( array $tabs ) : array {
+function add_tools_tab( array $tabs ): array {
 	return array_merge(
 		$tabs,
 		array(
@@ -73,7 +73,7 @@ function add_tools_tab( array $tabs ) : array {
  *
  * @return void
  */
-function add_tools_tab_content( string $tab ) : void {
+function add_tools_tab_content( string $tab ): void {
 	if ( 'troubleshooting' !== $tab ) {
 		return;
 	}
@@ -86,7 +86,7 @@ function add_tools_tab_content( string $tab ) : void {
  *
  * @return void
  */
-function register_actions() : void {
+function register_actions(): void {
 	if ( ! \is_admin() || ! \current_user_can( 'manage_options' ) ) {
 		return;
 	}

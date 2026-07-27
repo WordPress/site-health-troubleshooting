@@ -36,7 +36,7 @@ class Loopback {
 	 *
 	 * @return array<string, string>
 	 */
-	static function can_perform_loopback( $disable_plugin_hash = null, $allowed_plugins = null ) {
+	public static function can_perform_loopback( $disable_plugin_hash = null, $allowed_plugins = null ) {
 		$cookies = \wp_unslash( $_COOKIE );
 		$timeout = 10;
 		$headers = array(
@@ -128,7 +128,7 @@ class Loopback {
 	 *
 	 * @return void
 	 */
-	static function loopback_no_plugins() {
+	public static function loopback_no_plugins() {
 		\check_ajax_referer( 'health-check-loopback-no-plugins' );
 
 		if ( ! \current_user_can( 'view_site_health_checks' ) ) {
@@ -240,7 +240,7 @@ class Loopback {
 	 *
 	 * @return void
 	 */
-	static function loopback_test_individual_plugins() : void {
+	public static function loopback_test_individual_plugins(): void {
 		\check_ajax_referer( 'health-check-loopback-individual-plugins' );
 
 		if ( ! \current_user_can( 'view_site_health_checks' ) ) {
@@ -292,7 +292,7 @@ class Loopback {
 		\wp_send_json_success( $response );
 	}
 
-	static function loopback_test_default_theme() : void {
+	public static function loopback_test_default_theme(): void {
 		\check_ajax_referer( 'health-check-loopback-default-theme' );
 
 		if ( ! \current_user_can( 'view_site_health_checks' ) ) {

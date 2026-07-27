@@ -2,7 +2,7 @@
 <ruleset name="WordPress Coding Standards">
     <description>Apply WordPress Coding Standards to all Health Check plugin files.</description>
 
-    <config name="installed_paths" value="vendor/wp-coding-standards/wpcs" />
+    <config name="installed_paths" value="vendor/wp-coding-standards/wpcs,vendor/phpcsstandards/phpcsutils,vendor/phpcsstandards/phpcsextra" />
 	<config name="text_domain" value="troubleshooting" />
 
     <rule ref="WordPress-Core"/>
@@ -31,4 +31,8 @@
 		<exclude-pattern>*/mu-plugins/troubleshooting-mode.php</exclude-pattern>
 	</rule>
 
+	<!-- Renaming parameters that shadow reserved keywords risks breaking callers using PHP 8 named arguments. -->
+	<rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames">
+		<severity>0</severity>
+	</rule>
 </ruleset>

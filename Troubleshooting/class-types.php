@@ -33,5 +33,4 @@ class Types {
 		// Return the converted value.
 		return $value;
 	}
-
 }
