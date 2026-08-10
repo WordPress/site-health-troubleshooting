@@ -21,10 +21,12 @@
   "version": "1.0.0",
   "scripts": {
     "build": "wp-scripts build",
+    "lint": "npm-run-all lint:css lint:js",
     "lint:css": "wp-scripts lint-style './src/styles/**/*.scss'",
     "lint:js": "wp-scripts lint-js './src/**/*.js'",
     "lint:php": "wp-env run --env-cwd='wp-content/plugins/troubleshooting' cli composer run-script lint",
-    "test:e2e": "playwright test",
+    "test": "npm-run-all lint test:e2e",
+    "test:e2e": "wp-scripts test-playwright --config ./tests/e2e.config.ts",
     "test:e2e-report": "playwright show-report",
     "test:e2e:debug": "wp-scripts test-playwright --config ./tests/e2e.config.ts --ui",
     "test:e2e:watch": "npm run test:e2e -- --watch",

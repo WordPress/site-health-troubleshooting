@@ -1,6 +1,6 @@
 {
-	"core": null,
-	"phpVersion": "7.2",
+	"core": "https://wordpress.org/wordpress-7.0.zip",
+	"phpVersion": "7.4",
 	"plugins": [
 		".",
 		"https://downloads.wordpress.org/plugin/plugin-check.zip"

@@ -1,9 +1,6 @@
-import { test, expect } from '@playwright/test';
-import { signIn } from "../common";
+import { test, expect } from '../common';
 
 test( 'Check that `Troubleshooting` is added as a tab to Site Health', async ( { page } ) => {
-	await signIn( { page } );
-
 	await page.goto( '/wp-admin/site-health.php' );
 
 	await expect(
@@ -13,8 +10,6 @@ test( 'Check that `Troubleshooting` is added as a tab to Site Health', async ( {
 } );
 
 test( 'Toggle troubleshooting mode from Site Health', async( { page } ) => {
-	await signIn( { page } );
-
 	await page.goto( '/wp-admin/site-health.php?tab=troubleshooting' );
 
 	await page.locator( '[type=submit]' ).getByText( /Enable Troubleshooting Mode/ ).click();
