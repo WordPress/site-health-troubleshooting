@@ -183,6 +183,54 @@ class MustUse {
 	}
 
 	/**
+	 * Locate the main Troubleshooting plugin file, regardless of the directory
+	 * name used in the current environment.
+	 *
+	 * @return string|null
+	 */
+	private function get_plugin_file(): ?string {
+		if ( \defined( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_FILE' ) && \file_exists( SITEHEALTH_TROUBLESHOOTING_PLUGIN_FILE ) ) {
+			return SITEHEALTH_TROUBLESHOOTING_PLUGIN_FILE;
+		}
+
+		$symlinked_plugin_file = \dirname( __DIR__ ) . '/troubleshooting.php';
+
+		if ( \file_exists( $symlinked_plugin_file ) ) {
+			return $symlinked_plugin_file;
+		}
+
+		$plugin_files = array_merge(
+			$this->active_plugins,
+			array_keys( (array) \get_site_option( 'active_sitewide_plugins', array() ) )
+		);
+
+		foreach ( $plugin_files as $plugin_file ) {
+			if ( 'troubleshooting.php' !== \basename( $plugin_file ) ) {
+				continue;
+			}
+
+			$resolved_plugin_file = \trailingslashit( \WP_PLUGIN_DIR ) . $plugin_file;
+
+			if ( \file_exists( $resolved_plugin_file ) ) {
+				return $resolved_plugin_file;
+			}
+		}
+
+		$fallbacks = array(
+			\trailingslashit( \WP_PLUGIN_DIR ) . 'troubleshooting/troubleshooting.php',
+			\trailingslashit( \WP_PLUGIN_DIR ) . 'site-health-troubleshooting/troubleshooting.php',
+		);
+
+		foreach ( $fallbacks as $fallback_plugin_file ) {
+			if ( \file_exists( $fallback_plugin_file ) ) {
+				return $fallback_plugin_file;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Enqueue styles and scripts used by the MU plugin if applicable.
 	 *
 	 * @return void
@@ -192,14 +240,22 @@ class MustUse {
 			return;
 		}
 
-		if ( ! \file_exists( \WP_PLUGIN_DIR . '/troubleshooting/build/troubleshooting.asset.php' ) ) {
+		$plugin_file = $this->get_plugin_file();
+
+		if ( null === $plugin_file ) {
 			return;
 		}
 
-		$troubleshooter = include \WP_PLUGIN_DIR . '/troubleshooting/build/troubleshooting.asset.php';
+		$asset_file = \trailingslashit( \dirname( $plugin_file ) ) . 'build/troubleshooting.asset.php';
 
-		\wp_enqueue_script( 'troubleshooting-must-use', \plugins_url( '/troubleshooting/build/troubleshooting.js' ), array( 'site-health' ), $troubleshooter['version'], true );
-		\wp_enqueue_style( 'troubleshooting-must-use', \plugins_url( '/troubleshooting/build/troubleshooting.css' ), array(), $troubleshooter['version'] );
+		if ( ! \file_exists( $asset_file ) ) {
+			return;
+		}
+
+		$troubleshooter = include $asset_file;
+
+		\wp_enqueue_script( 'troubleshooting-must-use', \plugins_url( 'build/troubleshooting.js', $plugin_file ), array( 'site-health' ), $troubleshooter['version'], true );
+		\wp_enqueue_style( 'troubleshooting-must-use', \plugins_url( 'build/troubleshooting.css', $plugin_file ), array(), $troubleshooter['version'] );
 	}
 
 	/**
