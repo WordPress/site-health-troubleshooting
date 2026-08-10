@@ -10,6 +10,9 @@
  * Description: Checks the health of your WordPress install.
  * Author: Clorith
  * Version: 1.0.2
+ * Requires at least: 5.8
+ * Requires PHP: 7.1
+ * Tested up to: 7.1
  * Text Domain: troubleshooting
  * License: GPLv2 or later
  */
@@ -29,7 +32,7 @@ define( 'SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY', __DIR__ );
 spl_autoload_register(
 	function ( $class ) {
 		$prefix   = 'SiteHealth\\Troubleshooting\\';
-		$base_dir = WP_PLUGIN_DIR . '/troubleshooting/Troubleshooting/';
+		$base_dir = \trailingslashit( SITEHEALTH_TROUBLESHOOTING_PLUGIN_DIRECTORY ) . 'Troubleshooting/';
 
 		if ( 0 !== strpos( $class, $prefix ) ) {
 			return;
