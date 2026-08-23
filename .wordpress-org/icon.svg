@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <path id="Background" fill="#1374AB" d="M0 0h128v128H0z"/>
+  <path id="Shade" fill-rule="evenodd" fill="#136C9E" d="M20.922 107.077l3.62-14.411L70.688 43.75l2.958-6.396 19.87-19.307L128 52.532V128H41.844l-20.922-20.923
+    M120,42 a34,34 0 1,0 -68,0 a34,34 0 1,0 68,0 Z"/>
+  <g id="ToolShade" fill="none" stroke="#136C9E">
+    <line x1="70" y1="67" x2="26.6" y2="112.7" stroke-width="13" stroke-linecap="round"/>
+    <circle cx="90" cy="46" r="28" stroke-width="8"/>
+    <ellipse cx="70.3" cy="67.2" rx="7.5" ry="10.5" fill="#136C9E" stroke="none" transform="rotate(133.5 70.3 67.2)"/>
+  </g>
+  <line id="Handle" x1="66" y1="63" x2="22.6" y2="108.7" stroke="#EEEBE1" stroke-width="13" stroke-linecap="round"/>
+  <circle id="LensRing" cx="86" cy="42" r="28" fill="none" stroke="#EEEBE1" stroke-width="8"/>
+  <ellipse id="Bezel" cx="66.3" cy="63.2" rx="7.5" ry="10.5" fill="#EEEBE1" transform="rotate(133.5 66.3 63.2)"/>
+  <circle id="LensGlass" cx="86" cy="42" r="24" fill="#1374AB"/>
+  <g id="Bug" transform="translate(86,42) scale(0.72)" fill="none" stroke="#EEEBE1" stroke-width="1.6" stroke-linecap="round">
+    <ellipse cx="0" cy="2" rx="7" ry="9" fill="#EEEBE1" stroke="none"/>
+    <circle cx="0" cy="-8" r="4" fill="#EEEBE1" stroke="none"/>
+    <line x1="0" y1="2" x2="0" y2="-2" stroke="#1374AB" stroke-width="1.2"/>
+    <line x1="-2" y1="-11" x2="-5" y2="-16"/>
+    <line x1="2" y1="-11" x2="5" y2="-16"/>
+    <line x1="-6" y1="-3" x2="-13" y2="-6"/>
+    <line x1="-7" y1="2" x2="-14" y2="1"/>
+    <line x1="-6" y1="7" x2="-13" y2="9"/>
+    <line x1="6" y1="-3" x2="13" y2="-6"/>
+    <line x1="7" y1="2" x2="14" y2="1"/>
+    <line x1="6" y1="7" x2="13" y2="9"/>
+  </g>
+  <path id="Heart" fill="#EF4043" d="M63.998 112.369c9.026-3.795 15.559-10.273 19.082-16.833 3.47-6.532 3.958-13.038.868-16.94-2.793-3.498-6.424-4.826-10.111-4.718-3.687.109-7.264 1.708-9.839 3.957-2.575-2.249-6.153-3.848-9.84-3.957-3.686-.108-7.318 1.22-10.11 4.718-3.091 3.902-2.603 10.408.921 16.94 3.47 6.56 10.003 13.038 19.029 16.833z"/>
+</svg>
