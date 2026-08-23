@@ -11,7 +11,7 @@
  * Author: Clorith
  * Version: 1.0.2
  * Requires at least: 5.8
- * Requires PHP: 7.1
+ * Requires PHP: 7.2
  * Tested up to: 7.1
  * Text Domain: troubleshooting
  * License: GPLv2 or later
