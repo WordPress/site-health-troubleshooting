@@ -314,7 +314,7 @@ class MustUse {
 		 * This is to early for `get_current_screen()`, so we have to do it the
 		 * old fashioned way with `$_SERVER`.
 		 */
-		$request_uri = \filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
+		$request_uri = wp_unslash( $_SERVER['REQUEST_URI'] ?? '' );
 		if ( 'plugin-install.php' === substr( $request_uri, -18 ) ) {
 			$caps['activate_plugins'] = false;
 		}
@@ -765,8 +765,8 @@ class MustUse {
 	 */
 	private function get_clean_url( $url = null ) {
 		if ( ! $url ) {
-			$http_host   = \filter_input( INPUT_SERVER, 'HTTP_HOST', FILTER_SANITIZE_STRING );
-			$request_uri = \filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
+			$http_host   = wp_unslash( $_SERVER['HTTP_HOST'] ?? '' );
+			$request_uri = wp_unslash( $_SERVER['REQUEST_URI'] ?? '' );
 
 			// The full URL for the current request.
 			$raw_url = ( \is_ssl() ? 'https://' : 'http://' ) . $http_host . $request_uri;
