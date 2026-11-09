@@ -1,0 +1,132 @@
+name: Deploy to WordPress.org
+
+on:
+    # Publishing a (non-pre-release) GitHub release builds the plugin and deploys it,
+    # along with readme.txt and the .wordpress-org/ assets, as a new version.
+    release:
+        types: [published]
+
+    # Manually triggered to push readme.txt and .wordpress-org/ asset updates for the
+    # currently released version, without releasing a new version.
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+# Never run two deployments against WordPress.org SVN at the same time.
+concurrency:
+    group: deploy-wordpress-org
+    cancel-in-progress: false
+
+env:
+    SLUG: troubleshooting
+    SVN_URL: https://plugins.svn.wordpress.org/troubleshooting
+
+jobs:
+    deploy-plugin:
+        name: Deploy new plugin version
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout release tag
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+            - name: Verify release tag matches plugin version
+              env:
+                  TAG_NAME: ${{ github.event.release.tag_name }}
+              run: |
+                  VERSION="${TAG_NAME#v}"
+                  HEADER_VERSION=$(grep -m1 -E '^\s*\*\s*Version:' troubleshooting.php | sed -E 's/.*Version:\s*//' | tr -d '[:space:]')
+                  STABLE_TAG=$(grep -m1 -E '^Stable tag:' readme.txt | sed -E 's/Stable tag:\s*//' | tr -d '[:space:]')
+                  echo "Release tag: ${VERSION}, plugin header: ${HEADER_VERSION}, readme stable tag: ${STABLE_TAG}"
+                  if [ "${VERSION}" != "${HEADER_VERSION}" ] || [ "${VERSION}" != "${STABLE_TAG}" ]; then
+                      echo "::error::Release tag ${TAG_NAME} does not match the plugin header Version (${HEADER_VERSION}) and readme.txt Stable tag (${STABLE_TAG})."
+                      exit 1
+                  fi
+                  echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
+
+            # The deploy action silently succeeds without doing anything when the tag
+            # already exists, so fail loudly instead.
+            - name: Verify version is not already on WordPress.org
+              run: |
+                  STATUS=$(curl -s -o /dev/null -w '%{http_code}' "${SVN_URL}/tags/${VERSION}/")
+                  if [ "${STATUS}" = "200" ]; then
+                      echo "::error::Version ${VERSION} already exists on WordPress.org SVN. Bump the version and create a new release."
+                      exit 1
+                  elif [ "${STATUS}" != "404" ]; then
+                      echo "::error::Unexpected HTTP ${STATUS} while checking ${SVN_URL}/tags/${VERSION}/; refusing to deploy."
+                      exit 1
+                  fi
+
+            - name: Setup Node.js
+              uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+              with:
+                  node-version: 24
+                  cache: npm
+
+            - name: Install npm dependencies
+              run: npm ci
+
+            - name: Build plugin
+              run: npm run build
+
+            - name: Create plugin zip
+              run: npm run plugin-zip
+
+            - name: Extract and verify plugin zip
+              run: |
+                  unzip ./troubleshooting.zip -d ./plugin-build
+                  echo "Files to be deployed:"
+                  (cd ./plugin-build && find . -type f | sort)
+                  for required in troubleshooting.php readme.txt uninstall.php build/troubleshooting.js build/troubleshooting.asset.php; do
+                      if [ ! -f "./plugin-build/${SLUG}/${required}" ]; then
+                          echo "::error::Built plugin is missing ${required}; refusing to deploy."
+                          exit 1
+                      fi
+                  done
+
+            - name: Deploy plugin to WordPress.org
+              uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # 2.3.0
+              env:
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                  VERSION: ${{ env.VERSION }}
+                  BUILD_DIR: ./plugin-build/${{ env.SLUG }}
+                  ASSETS_DIR: .wordpress-org
+
+    deploy-assets:
+        name: Deploy readme and assets only
+        # Only from the default branch, so a feature branch can never overwrite the live readme.
+        if: ${{ github.event_name == 'workflow_dispatch' && github.ref_name == github.event.repository.default_branch }}
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout source
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+            # Publishing a readme whose Stable tag points at an unreleased version would
+            # break the plugin's download on WordPress.org.
+            - name: Verify readme Stable tag is already released
+              run: |
+                  STABLE_TAG=$(grep -m1 -E '^Stable tag:' readme.txt | sed -E 's/Stable tag:\s*//' | tr -d '[:space:]')
+                  if [ -z "${STABLE_TAG}" ]; then
+                      echo "::error::Could not read Stable tag from readme.txt."
+                      exit 1
+                  fi
+                  STATUS=$(curl -s -o /dev/null -w '%{http_code}' "${SVN_URL}/tags/${STABLE_TAG}/")
+                  if [ "${STATUS}" != "200" ]; then
+                      echo "::error::readme.txt Stable tag ${STABLE_TAG} is not a released version on WordPress.org (HTTP ${STATUS}). Publish a GitHub release instead."
+                      exit 1
+                  fi
+                  echo "Stable tag ${STABLE_TAG} is released; deploying readme.txt and .wordpress-org/ only."
+
+            - name: Deploy readme and assets to WordPress.org
+              uses: 10up/action-wordpress-plugin-asset-update@2480306f6f693672726d08b5917ea114cb2825f7 # 2.2.0
+              env:
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                  ASSETS_DIR: .wordpress-org
+                  # Only sync readme.txt and the assets directory. Without this, the action
+                  # mirrors the whole repo (src/, tests/, etc.) into SVN trunk.
+                  IGNORE_OTHER_FILES: true
