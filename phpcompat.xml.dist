@@ -4,7 +4,7 @@
 
 	<rule ref="PHPCompatibilityWP"/>
 
-	<config name="testVersion" value="7.1-"/>
+	<config name="testVersion" value="7.2-"/>
 
 	<!-- Only scan PHP files. -->
 	<arg name="extensions" value="php"/>

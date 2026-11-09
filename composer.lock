@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c9cc0c316d4c192ea452e6e7130afe0",
+    "content-hash": "046542ffc5cae666b2513183b939d2cf",
     "packages": [],
     "packages-dev": [
         {
@@ -221,29 +221,29 @@
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
-            "version": "v1.0.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/composer-installer.git",
-                "reference": "4be43904336affa5c2f70744a348312336afd0da"
+                "reference": "963f0c67bffde0eac41b56be71ac0e8ba132f0bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/4be43904336affa5c2f70744a348312336afd0da",
-                "reference": "4be43904336affa5c2f70744a348312336afd0da",
+                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/963f0c67bffde0eac41b56be71ac0e8ba132f0bd",
+                "reference": "963f0c67bffde0eac41b56be71ac0e8ba132f0bd",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1.0 || ^2.0",
+                "composer-plugin-api": "^2.2",
                 "php": ">=5.4",
-                "squizlabs/php_codesniffer": "^2.0 || ^3.1.0 || ^4.0"
+                "squizlabs/php_codesniffer": "^3.1.0 || ^4.0"
             },
             "require-dev": {
-                "composer/composer": "*",
+                "composer/composer": "^2.2",
                 "ext-json": "*",
                 "ext-zip": "*",
-                "php-parallel-lint/php-parallel-lint": "^1.3.1",
-                "phpcompatibility/php-compatibility": "^9.0",
+                "php-parallel-lint/php-parallel-lint": "^1.4.0",
+                "phpcompatibility/php-compatibility": "^9.0 || ^10.0.0@dev",
                 "yoast/phpunit-polyfills": "^1.0"
             },
             "type": "composer-plugin",
@@ -262,9 +262,9 @@
             "authors": [
                 {
                     "name": "Franck Nijhof",
-                    "email": "franck.nijhof@dealerdirect.com",
-                    "homepage": "http://www.frenck.nl",
-                    "role": "Developer / IT Manager"
+                    "email": "opensource@frenck.dev",
+                    "homepage": "https://frenck.dev",
+                    "role": "Open source developer"
                 },
                 {
                     "name": "Contributors",
@@ -272,7 +272,6 @@
                 }
             ],
             "description": "PHP_CodeSniffer Standards Composer Installer Plugin",
-            "homepage": "http://www.dealerdirect.com",
             "keywords": [
                 "PHPCodeSniffer",
                 "PHP_CodeSniffer",
@@ -293,9 +292,28 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPCSStandards/composer-installer/issues",
+                "security": "https://github.com/PHPCSStandards/composer-installer/security/policy",
                 "source": "https://github.com/PHPCSStandards/composer-installer"
             },
-            "time": "2023-01-05T11:28:13+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/PHPCSStandards",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/jrfnl",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/php_codesniffer",
+                    "type": "open_collective"
+                },
+                {
+                    "url": "https://thanks.dev/u/gh/phpcsstandards",
+                    "type": "thanks_dev"
+                }
+            ],
+            "time": "2026-05-06T08:26:05+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -3075,16 +3093,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.38.2",
+            "version": "v1.43.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6"
+                "reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6",
-                "reference": "d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/122889ed24dc000165bcbfd77ec412f15cbdfc6a",
+                "reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a",
                 "shasum": ""
             },
             "require": {
@@ -3136,7 +3154,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.38.2"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.43.3"
             },
             "funding": [
                 {
@@ -3156,7 +3174,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-27T06:59:30+00:00"
+            "time": "2026-10-28T09:35:49+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
@@ -3240,16 +3258,16 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.37.0",
+            "version": "v1.43.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "dfb55726c3a76ea3b6459fcfda1ec2d80a682411"
+                "reference": "9c6a5d6b01ca51d486c813e9a9c0ed55f208bb74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/dfb55726c3a76ea3b6459fcfda1ec2d80a682411",
-                "reference": "dfb55726c3a76ea3b6459fcfda1ec2d80a682411",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/9c6a5d6b01ca51d486c813e9a9c0ed55f208bb74",
+                "reference": "9c6a5d6b01ca51d486c813e9a9c0ed55f208bb74",
                 "shasum": ""
             },
             "require": {
@@ -3300,7 +3318,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.37.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.43.0"
             },
             "funding": [
                 {
@@ -3320,7 +3338,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-10T16:19:22+00:00"
+            "time": "2026-09-25T15:50:05+00:00"
         },
         {
             "name": "symfony/process",

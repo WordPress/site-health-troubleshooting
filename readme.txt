@@ -1,7 +1,7 @@
 === Troubleshooting ===
 Tags: health check, site health
 Contributors: Clorith
-Requires at least: 5.8
+Requires at least: 6.4
 Requires PHP: 7.2
 Tested up to: 7.1
 Stable tag: 1.0.2
