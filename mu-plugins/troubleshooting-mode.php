@@ -149,7 +149,7 @@ class MustUse {
 			\add_action( 'admin_notices', array( $this, 'prompt_install_default_theme' ) );
 			\add_filter( 'user_has_cap', array( $this, 'remove_plugin_theme_install' ) );
 
-			\add_action( 'plugin_action_links', array( $this, 'plugin_actions' ), 50, 4 );
+			\add_filter( 'plugin_action_links', array( $this, 'plugin_actions' ), 50, 4 );
 
 			\add_action( 'admin_notices', array( $this, 'display_dashboard_widget' ) );
 			\add_action( 'admin_footer', array( $this, 'dashboard_widget_scripts' ) );
@@ -315,7 +315,7 @@ class MustUse {
 		 * old fashioned way with `$_SERVER`.
 		 */
 		$request_uri = \filter_input( INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_STRING );
-		if ( 'plugin-install.php' === substr( $request_uri, -18 ) ) {
+		if ( 'plugin-install.php' === substr( (string) $request_uri, -18 ) ) {
 			$caps['activate_plugins'] = false;
 		}
 
@@ -560,7 +560,7 @@ class MustUse {
 			$client_ip = \filter_input( INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP );
 
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput -- We are intentionally not sanitizing the cookie, as we are using it to populate a global variable which is sanitized correctly later, and this would lead to potential double-sanitizing.
-			$_GET['health-check-disable-plugin-hash'] = $_COOKIE['wp-health-check-disable-plugins'] . md5( $client_ip );
+			$_GET['health-check-disable-plugin-hash'] = $_COOKIE['wp-health-check-disable-plugins'] . md5( (string) $client_ip );
 		}
 
 		// If the disable hash isn't set, no need to interact with things.
@@ -1545,11 +1545,11 @@ class MustUse {
 													\_n(
 														'Show %d remaining plugin',
 														'Show %d remaining plugins',
-														( is_countable( $this->active_plugins ) ? ( count( $this->active_plugins ) - 5 ) : 0 ),
+														count( $this->active_plugins ) - 5,
 														'troubleshooting'
 													)
 												),
-												\esc_html( (string) ( is_countable( $this->active_plugins ) ? ( count( $this->active_plugins ) - 5 ) : 0 ) )
+												\esc_html( (string) ( count( $this->active_plugins ) - 5 ) )
 											)
 										);
 									}
