@@ -226,7 +226,7 @@ class Troubleshoot {
 
 		\update_option( 'health-check-allowed-plugins', $allowed_plugins );
 
-		\update_option( 'health-check-disable-plugin-hash', $loopback_hash . md5( $client_ip ) );
+		\update_option( 'health-check-disable-plugin-hash', $loopback_hash . md5( (string) $client_ip ) );
 
 		setcookie( 'wp-health-check-disable-plugins', $loopback_hash, 0, \COOKIEPATH, \COOKIE_DOMAIN );
 	}
