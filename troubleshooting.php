@@ -10,7 +10,7 @@
  * Description: Checks the health of your WordPress install.
  * Author: Clorith
  * Version: 1.0.2
- * Requires at least: 5.8
+ * Requires at least: 6.4
  * Requires PHP: 7.2
  * Tested up to: 7.1
  * Text Domain: troubleshooting

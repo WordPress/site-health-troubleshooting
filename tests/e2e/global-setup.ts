@@ -33,7 +33,7 @@ async function waitForTestSite() {
 async function globalSetup() {
 	execFileSync( 'npx', [ 'wp-env', 'start' ], { stdio: 'inherit' } );
 
-	execFileSync( 'npx', [ 'wp-env', 'clean', 'tests' ], { stdio: 'inherit' } );
+	execFileSync( 'npx', [ 'wp-env', 'reset', 'tests' ], { stdio: 'inherit' } );
 
 	execFileSync(
 		'npx',

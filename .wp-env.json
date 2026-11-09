@@ -1,13 +1,10 @@
 {
-	"core": "https://wordpress.org/wordpress-7.0.zip",
+	"core": "https://wordpress.org/wordpress-7.1.zip",
 	"phpVersion": "7.4",
 	"plugins": [
 		".",
 		"https://downloads.wordpress.org/plugin/plugin-check.zip"
 	],
-	"mappings": {
-		"wp-content/mu-plugins/troubleshooting-mode.php": "./mu-plugins/troubleshooting-mode.php"
-	},
 	"config": {
 		"WP_DEBUG": true,
 		"SCRIPT_DEBUG": true,
